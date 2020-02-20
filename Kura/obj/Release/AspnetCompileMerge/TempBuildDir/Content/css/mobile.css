@@ -1,0 +1,125 @@
+@media(min-width: 320px) {
+    footer {
+        display: none;
+    }
+
+    #burger {
+        display: none;
+    }
+    #l {
+            background-color: red;
+     }
+
+    #logoInner{
+        display:none;
+    }
+
+    #themeToggle{
+        display:none;
+    }
+    #themeToggle1{
+        display:block;
+    }
+}
+
+
+@media(min-width: 769px) {
+    footer {
+        display: block;
+    }
+
+    .hide-md{
+        display:none;
+    }
+
+    #themeToggle {
+        display: block;
+    }
+    #themeToggle1 {
+        display: none;
+    }
+
+    #mobile-nav {
+        display: none;
+    }
+
+    #nav-prev{
+        display:none;
+    }
+
+    #logoInner{
+        display:block;
+    }
+
+    #burger {
+        display: block;
+    }
+
+    #NavUserBadge {
+        display: none;
+    }
+
+    .top-menubar {
+        display: none;
+    }
+
+    #loginmain {
+        margin-left: -20vw;
+        margin-top:-5vh;
+    }
+
+
+    /* #mainNav{
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1030;
+        box-shadow: 0px 0.5px 4px #c3c2c2;
+    } */
+
+}
+
+@media(min-width:992px) {
+    #burger {
+        display: none;
+    }
+
+    .top-menubar {
+        display: block;
+    }
+}
+
+.mobile-nav-item {
+    position: relative;
+    width: 25%;
+    padding: 8px 15px 8px 15px;
+    text-align: center;
+}
+
+#userBadge {
+    font-family: cursive;
+    font-size: 40px;
+    padding: 20px;
+    width:100px;
+    text-align:center;
+    border-radius: 50%;
+    margin: 0px auto;
+    background-color: #179a12;
+    transition: background 1s, transform 0.5s;
+}
+
+    #userBadge:hover {
+        background-color: #2b973a;
+        transform: rotate(360deg);
+    }
+
+#profileEmailText {
+    font-size: smaller;
+    font-family: monospace;
+}
+
+#profile-content {
+    background-color: #091220f2;
+    border: 3px solid #208be1;
+}

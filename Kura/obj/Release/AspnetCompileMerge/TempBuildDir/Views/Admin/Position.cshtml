@@ -1,0 +1,293 @@
+﻿@model Koora.Models.ViewModels.AdminPositionViewModel
+
+@{
+    ViewBag.Title = "Position";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="pr-5 pl-5 mt-5">
+    <h2>Position</h2>
+
+    <button id="newBtn" class="btn btn-disabled btn-primary mb-3 mt-3"><i class="fa fa-plus"></i> Position</button>
+
+    <div class="table-container min-vh-100">
+        <table id="positions" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        Event Name
+                    </th>
+                    <th>
+                        Position Name
+                    </th>
+                    <th>TOOL</th>
+                </tr>
+            </thead>
+
+
+            @foreach (var item in Model.Positions)
+            {
+                <tr>
+                    <td id="eventNameR" data-position-id="@item.id">
+                        @Html.DisplayFor(modelitem=>item._event.name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.name)
+                    </td>
+                    <td>
+                        <a class="btn text-white btn-success" id="addNominee" data-position-id="@item.id"><i class="fa fa-plus-circle"></i> Nominee</a>
+                        <a class="btn text-white btn-primary" id="edit" data-position-id="@item.id"><i class="fa fa-edit"></i> Edit</a>
+                        <a class="btn text-white btn-danger ml-1" id="delete" data-position-id="@item.id"><i class="fa fa-trash-o"></i> Delete</a>
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+
+
+
+</div>
+
+
+
+
+<div class="modal fade" id="NewForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="NewEventFormLabel">New Position</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <p id="msgEventId" style="display:none" class="text-danger">Please Select an event</p>
+                    @Html.DropDownListFor(m=>m.eventId,new SelectList(Model.Events,"id","name"),"Select Event", new { @class="form-control"})
+                </div>
+                <div class="form-group">
+                    <p id="msgName" style="display:none" class="text-danger">Please give this position a name</p>
+                    <label for="positionName">Position Name</label>
+                    <input type="text" id="positionName" placeholder="Position Name" class="form-control" name="positionName" value="" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+                <button type="button" id="create" class="btn btn-primary"><i class="fa fa-save"></i>Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="EditForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventFormLabel">Edit Position</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <p id="msgEE" class="text-danger" style="display:none">Please enter position name</p>
+                        <label>Position Name</label>
+                        <input type="text" class="form-control" name="name" id="Ename" />
+                    </div>
+                    <input type="hidden" id="id" name="id" />
+
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+                <button type="button" id="save" class="btn btn-primary"><i class="fa fa-save"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="AddNomineeForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="NomineeFormLabel">Add Nominee for </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <p id="ErrorName" class="text-danger" style="display:none">Please enter nominee's name correctly</p>
+                        <label>Nominee Name</label>
+                        <input type="text" class="form-control" name="name" id="NomineeName" />
+                    </div>
+                    <p class="text-danger" style="display:none" id="ErrorFile">Make sure this is a valid image file</p>
+                    <div class="form-group">
+                        <input class="form-control" type="file" id="nomineeFile" />
+                    </div>
+                    <input type="hidden" id="PositionId" name="PositionId" />
+
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+                <button type="button" id="addNomineeBtn" class="btn btn-success"><i class="fa fa-plus-circle"></i>  Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var table = $("#positions").DataTable();
+            //from the edit form
+            var id = 0; var name = ""; var button;
+
+            //Editing positons
+            $("#positions").on("click", "#edit", function () {
+                $("#msgEE").hide();
+                button = $(this);
+                //getting click position into the form
+                $.get("/Admin/EditPosition/" + $(this).data("position-id"), function (data) {
+                    //alert(data.name);
+                    
+                    $("#Ename").val(data.name);
+                    $('#id').val(data.id);
+
+                    $('#EditForm').modal('show');
+                    id = data.id;
+                });
+
+                
+            });
+            //saving edited position
+            $("#save").on("click", function () {
+                name = $("#Ename").val();
+                if (name != "") {
+                    $.post("/Admin/UpdatePosition/" + id, { id: id, name: name }, function (data) {
+                        $('#EditForm').modal('hide');
+                        //alert(data.Message);
+                        eventNameR = button.parent().prev().prev().text();
+
+                        var toolbutton = '<a class="btn text-white btn-success" id="addNominee" data-position-id="' + data.Position.id + '"><i class="fa fa-plus-circle"></i>Nominee</a>  <a class="btn text-white btn-primary" id="edit" data-position-id="' + data.Position.id + '"><i class="fa fa-edit"></i>Edit</a>   <a class="btn text-white btn-danger ml-1" id = "delete" data-position-id="' + data.Position.id + '" > <i class="fa fa-trash-o"></i>Delete</a > ';
+
+                        table.row(button.parents("tr")).data([eventNameR, name, toolbutton]).draw();
+
+
+
+                    });
+                } else {
+                    $("#msgEE").show();
+                }
+                
+            });
+
+            //Deleting positions
+            $("#positions").on("click", "#delete", function () {
+                var button = $(this);
+                if (confirm("Are you sure you want to delete this position?")) {
+                    $.get("/Admin/DeletePosition/" + $(this).data("position-id"), function (data) {
+                        toastr.success(data.Message);
+                        table.row(button.parents("tr")).remove().draw();
+                    });
+                };
+
+            });
+
+            // adding new Positions
+            $("#newBtn").click(function () {
+                
+                $("#NewForm").modal('show');
+                $("#msgName").hide(); $("#msgEventId").hide();               
+
+            });
+                //save the new Position
+            $("#create").on("click", function () {
+
+                name = $("#positionName").val();
+                eventId = $("#eventId").val();
+                eventName = $("#eventId option:selected").text();
+                if (name != "" && eventId != "") {
+                    $.post('/Admin/NewPosition', { name: name, eventId: parseInt(eventId) }, function (data) {
+                        $("#positionName").val(""); $("#eventId").val("");
+                        $("#NewForm").modal('hide');
+                        var toolbutton = '<a class="btn text-white btn-success" id="addNominee" data-position-id="' + data.Position.id + '"><i class="fa fa-plus-circle"></i>Nominee</a><a class="btn text-white btn-primary" id="edit" data-position-id="' + data.Position.id + '"><i class="fa fa-edit"></i>Edit</a><a class="btn text-white btn-danger ml-1" id = "delete" data-position-id="' + data.Position.id + '" > <i class="fa fa-trash-o"></i>Delete</a > ';
+
+                        table.row.add([eventName, data.Position.name, toolbutton]).draw(false);
+                    });
+                } else {
+                    if (name == "") {
+                        $("#msgName").show(); $("#msgEventId").hide();
+                    }
+                    if (eventId == "") {
+                        $("#msgEventId").show(); $("#msgName").hide();
+                    }
+                }
+            });
+        });
+
+        var positionId = 0;
+        //Adding position nominee
+        $("#positions").on("click", "#addNominee", function () {     
+            button = $(this);
+            $("#AddNomineeForm").modal('show');
+
+            var positionName = button.parent().prev().text(); var eventName = button.parent().prev().prev().text();
+            
+            $("#NomineeFormLabel").text("Nominee For " + positionName+" ("+eventName+")");
+            positionId = button.data("position-id"); $("#PositionId").val(positionId);          
+            
+        });
+
+        $("#addNomineeBtn").on("click", function () {
+            var nomineeName = $("#NomineeName").val().trim();
+            var image = $("#nomineeFile").get(0).files;
+            var fileText = $("#nomineeFile").val().trim();
+            var fileExt = "";
+            if (fileText != "") {
+                fileExt = fileText.split("\\")[2].split(".")[1];
+            }
+            var Data = new FormData();
+            Data.append("NomineeName", nomineeName); Data.append("PositionId", positionId); Data.append("Image", image[0])
+
+            if (nomineeName.length > 4 && (fileExt.toLowerCase() == "jpg" || fileExt.toLowerCase() == "jpeg" || fileExt.toLowerCase == "png")) {
+                $.ajax({
+                    type: "Post",
+                    url: "/Admin/NewNominee",
+                    data: Data,
+                    contentType: false,
+                    processData: false,
+
+                    success: function (data) {
+                        toastr.success(data.Message);
+                        $("#NomineeName").val("");
+                        $("#AddNomineeForm").modal('hide');
+                    }
+                });
+            } else {
+                toastr.error("Unable to submit form", "Upload Error");
+
+                if (nomineeName == "" || nomineeName<4) {
+                    $("#ErrorName").show(); 
+                }
+                if (fileText == "") {
+                    //add error 
+                }
+                if (!(fileExt == "jpg" || fileExt == "jpeg" || fileExt == "png")) {
+                    $("#ErrorFile").show();
+                }
+            }
+        });
+    </script>
+
+}

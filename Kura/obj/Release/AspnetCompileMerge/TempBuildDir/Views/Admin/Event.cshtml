@@ -1,0 +1,261 @@
+﻿@model IEnumerable<Koora.Models.MyModels.Event>
+
+@{
+    ViewBag.Title = "Event";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="pl-5 pr-5 mt-5">
+    <h2>Event</h2>
+
+    <button id="newBtn" class="btn btn-primary mb-3 mt-3">New Event</button>
+
+    <div class="table-container min-vh-100">
+        <table id="events" class="table table-hover">
+            <thead class="thead-primary">
+                <tr>
+                    <th>Event Name</th>
+                    <th>@Html.DisplayNameFor(model => model.Description)</th>
+                    <th>Created Time</th>
+                    <th>Ended Time</th>
+                    <th>TOOL</th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                    <td>@Html.DisplayFor(modelItem => item.createdTime)</td>
+                    @if (item.IsOngoing)
+                    {
+                        <td>Ongoing</td>
+                    }
+                    else
+                    {
+                        <td>@Html.DisplayFor(modelItem => item.endedTime)</td>
+                    }
+                    <td>
+                        <a class="btn text-white btn-primary" id="edit" data-event-id="@item.id"><i class="fa fa-edit"></i>Edit</a>
+                        <a class="btn text-white btn-danger ml-1" id="delete" data-event-id="@item.id"><i class="fa fa-trash-o"></i>Delete</a>
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+    
+
+</div>
+
+<!--Edit Event Modal-->
+
+<div class="modal fade" id="EditForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventFormLabel">Edit Event</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <p class="text-danger" id="ErrorNameS" style="display:none">Please give the event a name</p>
+                    <label for="name">Event Name</label>
+                    <input type="text" class="form-control" placeholder="Event New Name" name="name" id="name" />
+                </div>
+                <input type="hidden" id="id" name="id" />
+                <div class="form-group">
+                    <input id="isOngoingCb" type="checkbox" name="isOngoing" /><span>Still ongoing?</span>
+                </div>                
+                <div class="form-group">
+                    <p class="text-danger" id="ErrorDesS" style="display:none">Please give the event a description</p>
+                    <label for="description">Event Description</label>
+                    <textarea class="form-control" name="description" placeholder="Event New Description" id="description"></textarea>
+                </div>
+                
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+                <button type="button" id="save" class="btn btn-primary"><i class="fa fa-save"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--New Event Modal Form-->
+<div class="modal fade" id="NewForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="NewEventFormLabel">Create Event</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <p class="text-danger" id="ErrorName" style="display:none">Please give the event a name</p>
+                    <label for="Nname">Event Name</label>
+                    <input type="text" class="form-control" placeholder="Event Name" required id="Nname" />
+                </div>
+                <div class="form-group">
+                    <p class="text-danger" id="ErrorFile" style="display:none"></p>
+                    <input type="file" name="EventImage" class="form-control-file" id="NfileBrowser" required="required" />
+                </div>
+                <div class="form-group">
+                    <p class="text-danger" id="ErrorDes" style="display:none">Description shouldn't be below 15 characters</p>
+                    <label for="Ndescription">Event Description</label>
+                    <textarea class="form-control" id="Ndescription" placeholder="Event Description" required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close"></i>Close</button>
+                <button type="button" id="create" class="btn btn-primary"><i class="fa fa-save"></i>Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var table = $("#events").DataTable();
+            //from the edit form
+            var id = 0; var name = ""; var description = ""; 
+            
+            $("#events").on("click", "#edit", function () {
+                button = $(this);
+                $("#ErrorDesS").hide(); $("#ErrorNameS").hide();
+                $.get("/Admin/EditEvent/" + $(this).data("event-id"), function (data) {
+                    //alert(data.name);
+                    $("#name").val(data.name);
+                    $('#description').val(data.Description);
+                    $('#id').val(data.id);
+                    if (data.isOngoing)
+                        $("#isOngoingCb").prop("checked", "checked");
+                    else
+                        $("#isOngoingCb").removeProp("checked");
+
+                    $('#EditForm').modal('show');
+                    id = data.id;                    
+                });     
+            });
+
+            $("#save").on("click", function () {
+                name = $("#name").val().trim();
+                description = $('#description').val().trim();
+                var isOngoing = $("#isOngoingCb").prop("checked");
+                
+                if (name != "" && description != "") {
+                    $.post("/Admin/UpdateEvent/" + id, { id: id, name: name, description: description, isOngoing:isOngoing }, function (data) {
+
+                        var toolbutton = '<a class="btn text-white btn-primary" id="edit" data-event-id="' + id + '"><i class="fa fa-edit"></i>Edit</a><a class="btn text-white btn-danger ml-1" id = "delete" data-event-id="' + id + '" > <i class="fa fa-trash-o"></i>Delete</a > ';
+
+                        var endedTimeTxt="";
+                        if (isOngoing)
+                            endedTimeTxt = "Ongoing";
+                        else
+                            endedTimeTxt = data.EndedTime;
+
+                        alert(endedTimeTxt);
+                        table.row(button.parents("tr")).data([name, description, data.CreatedTime, endedTimeTxt, toolbutton]).draw();
+                        $('#EditForm').modal('hide');
+                        toastr.success(data.Message,"System");
+                        //window.location.reload();
+
+                    });
+                } else {
+                    if (name == "") {
+                        $("#ErrorNameS").show(); $("#ErrorDesS").hide();
+                    }
+                    if (description == "") {
+                        $("#ErrorDesS").show(); $("#ErrorNameS").hide();
+                    }
+                }
+                
+            });
+
+            $("#events").on("click", "#delete", function () {
+                var button = $(this);
+                if (confirm("Are you sure you want to delete this event?")) {
+                    $.get("/Admin/DeleteEvent/" + $(this).data("event-id"), function (data) {
+                        
+                        table.row(button.parents("tr")).remove().draw();
+                        //window.location.reload();
+                    });
+                };
+
+            });
+
+            $("#newBtn").click(function () { $("#NewForm").modal('show'); $("#ErrorName").hide(); $("#ErrorDes").hide(); });
+
+            $("#create").on("click", function () {
+                $("#ErrorFile").hide();$("#ErrorName").hide(); $("#ErrorDes").hide();
+                name = $("#Nname").val().trim();
+                description = $("#Ndescription").val().trim();
+                var image = $("#NfileBrowser").get(0).files;
+                var fileSize = 0;
+
+                var fileText = $("#NfileBrowser").val().trim();
+                var fileExt = "";
+                if (fileText != "") {
+                    fileExt = fileText.split("\\")[2].split(".")[1];
+                    fileSize = image[0].size / 1000;
+                }
+                
+                var data = new FormData;
+                data.append("name", name); data.append("description", description); data.append("Image", image[0])
+                if (fileSize<=100 && name != "" && description.length >= 15 && fileText != "" && (fileExt == "jpg" || fileExt == "jpeg" || fileExt == "png")) {
+                    $.ajax({
+                        type:"POST",
+                        url: "/Admin/NewEvent",
+                        data: data,
+                        contentType: false,
+                        processData: false,
+                        
+                        success: function (data) {
+                            $("#Ndescription").val(""); $("#Nname").val("");
+                            var toolbutton = '<a class="btn text-white btn-primary" id="edit" data-event-id="' + data.Event.id + '"><i class="fa fa-edit"></i>Edit</a><a class="btn text-white btn-danger ml-1" id = "delete" data-event-id="' + data.Event.id + '" > <i class="fa fa-trash-o"></i>Delete</a > ';
+
+                            table.row.add([name, description, data.CreatedTime, "Ongoing", toolbutton]).draw(false);
+                            toastr.success(data.Message, "System");
+                            
+                            $("#NewForm").modal('hide');
+                        //window.location.reload();
+                        }
+                        
+                    });
+                } else {
+                    toastr.error("Unable to submit form", "Upload Error");
+                    if (description == "" || description.length < 15) {
+                        $("#ErrorDes").show(); $("#ErrorName").hide();
+                    }
+                    
+                    if (name == "") {
+                        $("#ErrorName").show(); $("#ErrorDes").hide();
+                    }
+                    if (fileText == "") {
+                        //add error 
+                    }
+                    if (!(fileExt == "jpg" || fileExt == "jpeg" || fileExt == "png")) {
+                        $("#ErrorFile").show(); $("#ErrorFile").text("File type not accepted");
+                    }
+                    if (fileSize > 100) {
+                        $("#ErrorFile").show(); $("#ErrorFile").text("Image is too large, upload less 100kb image");
+                    }
+                }
+                
+            });
+        }); 
+    </script>
+    
+    }

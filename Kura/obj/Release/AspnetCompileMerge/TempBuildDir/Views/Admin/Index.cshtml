@@ -1,0 +1,94 @@
+﻿@model IEnumerable<Koora.Models.MyModels.Feedback>
+@{ 
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.title = "Dashboard";
+}
+
+    <section class="px-5 mt-5 min-vh-100">
+
+
+        <table id="FeedbackTable" class="table table-hover ">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Subject</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var feed in Model.OrderBy(f=>f.Id))
+                {
+                    <tr>
+                        <td>@feed.Id</td>
+                        <td>@feed.Sender</td>
+                        <td>@feed.Subject</td>
+                        <td> <span style="display:none">@feed.Message</span><a href="mailto:@feed.Email" style="display:none">@feed.Email</a> <span> @feed.Email</span></td>
+                        <td><span data-feedback-id="@feed.Id" id="view" class="viewBtn btn btn-primary">View</span> <span class="btn btn-danger" id="delete">Delete</span></td>
+                    </tr>
+                }
+
+            </tbody>
+            
+        </table>
+    </section>
+
+    <div class="modal fade" id="FeedbackModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="NewEventFormLabel">Feedback</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Name: <span id="detailName"></span></p>
+                    <p>Subject: <span id="detailSubject"></span></p>
+                    <p>Email: <span id="detailEmail"></span></p>
+                    <p>Message: <br /> <span id="detailMessage"></span></p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+@section scripts{
+    
+    <script>
+        $(document).ready(function () {
+            table = $("#FeedbackTable").DataTable();
+
+            //Editing feedbacks
+            $("#FeedbackTable").on("click", "#view", function () {
+                $("#FeedbackModal").modal('show');
+                var button = $(this);
+                var message = button.parent().prev().children().first().text();
+                var email = button.parent().prev().children().first().next().text();
+                var subject = button.parent().prev().prev().text();
+                var name = button.parent().prev().prev().prev().text();
+
+                $("#detailName").text(name); $("#detailSubject").text(subject); $("#detailEmail").html('<a href="mailto:' + email + '">' + email + '</a>'); $("#detailMessage").text(message);
+                //getting feed into the form
+            });
+            //deleting positons
+            $("#FeedbackTable").on("click", "#delete", function () {
+                
+                var button = $(this);
+                var tableRow = button.parents("tr");
+                bootbox.confirm("Do you want to delete this feedback?", function (result) {
+                    if (result)
+                        table.row(tableRow).remove().draw();
+                });
+                
+                
+                
+            });
+        });
+
+    </script>
+    
+    
+    }

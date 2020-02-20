@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Koora.Models.MyModels.Event>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Events";
+    ViewBag.idN = "home-p";
+}
+
+    <style>
+
+    </style>
+<!--====================================================
+                       HOME-P
+======================================================-->
+<div id="@ViewBag.idN" class="home-p pages-head1 text-center">
+    <div class="container">
+        <h1 class="wow fadeInUp" data-wow-delay="0.1s">Events On Campus</h1>
+        <p>Live</p>
+    </div><!--/end container-->
+</div>
+
+<!--====================================================
+                        news-p1q
+======================================================-->
+<section id="news-1" class="p-3">
+    <div class="p-4">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row mb-3 wow fadeInDown">
+                    @foreach (var e in Model)
+                    {
+                    <div class="card col-md-3 py-3 mb-4">
+                        
+                        <div class="desc-comp-offer-cont">
+                            <div class="thumbnail-blogs">
+                                <div style="background-image:url(@e.ImgDirectory);width:100%;min-height:20em;background-size:cover;" class="img-responsive"></div>
+                                @if (e.IsOngoing) 
+                                {
+                                    <span data-toggle="tooltip" data-placement="top" title="Ongoing Event">
+                                        <p class="signal s-on col-md-1 offset-11"></p> 
+                                    </span> 
+                                } else 
+                                {
+                                    <span data-toggle="tooltip" data-placement="top" title="Finished Event">
+                                        <p class="signal s-off col-md-1 offset-11"></p>
+                                    </span>
+                                }
+                            </div>
+
+                            <h3>@e.name</h3>
+                            <p class="desc">@e.Description</p>
+                            @if (e.IsOngoing)
+                            {
+                                
+                                <a href="/Event/position/@e.id"> <i class="fa fa-arrow-circle-o-right"></i> Learn More</a>
+                            }
+                            else
+                            {
+                                
+                                <a href="/Event/Result/@e.id"> <i class="fa fa-arrow-circle-o-right"></i> View Result</a>
+                            }
+
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $("#eventIco").addClass("activeNav");
+        });
+    </script>
+    
+    }

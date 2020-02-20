@@ -1,0 +1,100 @@
+﻿@model Koora.Models.ViewModels.VotePageViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutInner.cshtml";
+    ViewBag.title = Model.name + " nominees";
+}
+<section id="news-p1" class="news-p1 mb-5 min-vh-100">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4 mb-5">
+                <div id="alert-h" class="alert alert-dismissible fade show" style="display:none" role="alert">
+                    <strong id="callback"> </strong> .
+                </div>
+                @using (Html.BeginForm("Vote", "Event", FormMethod.Post))
+                {
+                    @*@Html.AntiForgeryToken();*@
+                    @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
+
+                    <div class="form-group">
+                        <p class="message text-danger" style="display:none">Please select a nominee</p>
+                        @Html.DropDownListFor(m => m.nomineeId, new SelectList(Model.nominees, "id", "name"), "Select Nominee", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" id="voteBtn" name="submit" class="btn btn-primary btn-block">Vote!!</button>
+                    </div>
+
+                }
+            </div>
+        </div>
+        @if (Model.nominees.Any())
+        {
+            <div class="row">
+                @foreach (var n in Model.nominees)
+                {
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="desc-comp-offer-cont">
+                            <div class="thumbnail-blogs">
+                                <div style="background-image:url(@n.imageDirectory);width:100%;min-height:300px;background-size:cover;"></div>
+                            </div>
+                            <h3 class="p-2 text-center">@n.name</h3>
+                            <p id="@n.id">Votes: @n.votes</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <h1 class="jumbotron">Nominees have not been Added</h1>
+        }
+        
+
+    </div>
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $("#eventIco").addClass("activeNav");
+
+        $('form').submit(function (event) {
+            event.preventDefault();
+            if ($("#nomineeId").val() == 0) {
+                $(".message").show();
+            } else {
+                bootbox.confirm("You're sure you want to vote for this nominee?", function (result) {
+                    if (result) {
+                        $("#voteBtn").text("Trying to Vote...");
+                        $(".message").hide();
+                        var nId = parseInt($("#nomineeId").val());
+                        var token = $('input[name="__RequestVerificationToken"]').val();
+                
+                        $.post('@Url.Action("Vote","Event")', { nomineeId: nId,__RequestVerificationToken: token }, function (data) {
+                            $("#" + nId).text("Votes: " + data.vCount)
+                            $("#alert-h").show();
+                            if (data.Message) {
+                                $("#callback").text("Voted successfully"); $("#alert-h").addClass("alert-success");
+                                $("#voteBtn").text("Vote!!");
+                            }else {
+                                $("#voteBtn").text("Vote!!");
+                                $("#callback").text("You have already voted for this category"); $("#alert-h").addClass("alert-danger");
+                            }
+                        }); 
+                    }
+                    
+                
+                });
+
+                                       
+            }
+            
+        });
+    </script>    
+    
+}
+
+
+
+
+

@@ -1,0 +1,200 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.title = "Login/Register";
+}
+
+<style>
+    .log-background {
+        /*background-color: #e3e3e3;*/
+        background-image: url(/Content/img/bgContact.png);
+        background-size: cover;
+         background-position:center;  
+        height: 100%;
+        /*padding-top: 5%;*/
+    }
+    .beautify li{
+        list-style: none;
+    }
+</style>
+
+<input type="hidden" id="returnUrl" name="returnUrl" value="@ViewBag.returnUrl" />
+<section class="container-fluid log-background">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-sm-0 col-md-6" id="loginmain" style="border:3px solid #2196f3;background-color:#cbe1fac9; padding:20px;text-align: center; margin:8vh 0 0 0;">
+                <!-- Login form -->
+                <div class="col-md-12 col-sm-12 py-4" id="login">
+                    <p class="text-center text-dark h2 pb-1">Login</p>
+                    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new {role = "form", @id="signinForm" }))
+                    {
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger beautify" })
+                        <p class="text-danger" id="errorLogin" style="display:none"></p>
+                        @Html.AntiForgeryToken()
+                        <div class="form-group ">
+                            <input type="email" id="Email" name="Email" placeholder="Enter email" class="form-control col-sm-12" required>
+                            @*@Html.TextBoxFor(m => m.Email, new { @placeholder = "Enter your eui email", @class = "form-control col-sm-12" })*@
+                        </div>
+                        <div class="form-group mt-4">
+                            <input type="password" name="Password" id="Password" placeholder="Enter password" class="form-control" required>
+                            @*@Html.PasswordFor(m => m.Password, new { @placeholder = "Enter password", @class = "form-control" })*@
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label text-white">
+                                <input class="form-check-input" id="RememberMe" name="RememberMe" type="checkbox" value="">
+                                @*@Html.CheckBoxFor(m => m.RememberMe, new { @class = "form-check-input" })*@
+                                <span class="text-secondary" style="margin-right: 5vw;">Remember me?</span>
+                            </label>
+                        </div>
+                        <div class="form-group mt-4">
+                            <button id="signInBtn" class="px-3 btn btn-outline-primary col-md-5 mb-3" type="submit">Login</button>
+                            <input class="btn btn-link col-md-5" type="button" value="Sign up" id="signup-btn">
+                        </div>
+                    }
+
+                </div>
+                <!-- Sign Up form -->
+                <div class="col-md-12 py-4" id="signup" >
+                    <p class="text-center text-dark h2 pb-1">Sign Up</p>
+                    @using (Html.BeginForm("RegisterUser", "Account", FormMethod.Post, new {role = "form",@id="signupForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <p id="errorFirstName" class="errorMessage" style="display:none">Please Enter a Valid name</p>
+                            <input type="text" name="firstName" id="firstName" class="form-control" required="required" placeholder="First Name" />
+                        </div>
+                        <div class="form-group">
+                            <p id="errorLastName" class="errorMessage" style="display:none">Please Enter a Valid name</p>
+                            <input type="text" name="lastName" id="lastName" class="form-control" required="required" placeholder="Last Name" />
+                        </div>  
+                        <div class="form-group">
+                            <p id="errorREmail" class="errorMessage" style="display:none"></p>
+                            <input type="email" name="REmail" id="REmail" class="form-control" required="required" placeholder="Edo University email"/>
+                        </div>
+                        <div class="form-group">
+                            <p id="errorGender" class="errorMessage" style="display:none">Don't have a gender?</p>
+                            <select name="Gender" id="Gender" class="form-control" required="required">
+                                <option value="null">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <p id="errorRPassword" class="errorMessage" style="display:none">Password should not be less than 6 character</p>
+                            <input type="password" name="RPassword" id="RPassword" class="form-control" required="required" placeholder="Password"/>
+                        </div>
+                        <div class="form-group">
+                            <p id="errorConfirmPassword" class="errorMessage" style="display:none">Passwords don't match</p>
+                            <input type="password" name="ConfirmPassword" id="ConfirmPassword" class="form-control" required="required" placeholder="Confirm Password" />
+                        </div>
+                        <div class="form-group">
+                            <input id="signUpBtn" class="btn btn-outline-primary col-md-5 mb-3" type="submit" value="Sign up">
+                            <input class="px-3 btn btn-link col-md-5" type="button" value="Login" id="login-btn">
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+@section Scripts {
+    @*@Scripts.Render("~/bundles/jqueryval")*@
+<script>   
+    
+   
+    $(document).ready(function () {       
+        $(".topmenu").hide();
+
+        $("#signup").hide();
+        $("#signup-btn").click(function () {
+            $("#login").hide(1000);
+            $("#signup").show(1000);
+        });
+        $("#login-btn").click(function () {
+            $("#signup").hide(1000);
+            $("#login").show(1000);
+        });
+
+        $("#signupForm").on("submit",function (event) {
+            event.preventDefault();
+            $("#errorGender").hide(); $("#errorRPassword").hide();$("#errorConfirmPassword").hide();
+
+            var gender = $("#Gender").val().trim();
+            var firstName = $("#firstName").val().trim();
+            var LastName = $("#lastName").val().trim();
+            var REmail = $("#REmail").val().trim();
+            var Rpassword = $("#RPassword").val().trim();
+            var ConfirmPassword = $("#ConfirmPassword").val().trim();
+            var token = $('input[name="__RequestVerificationToken"]').val();
+            var doit = true;
+
+            if (gender == "null") {
+                $("#Gender").focus(); $("#errorGender").show(); doit = false;
+            }
+                
+            
+            if (Rpassword.length < 6) {
+                $("#errorRPassword").show(); doit = false;
+            }
+            
+            if (Rpassword != ConfirmPassword) {
+                $("#errorConfirmPassword").show(); doit = false
+            }
+
+            ("#signUpBtn").text("Loging in....");
+            $("#signUpBtn").prop("disabled","disabled");
+            if (doit) {
+                $.post("/Account/RegisterUser", {
+                    __RequestVerificationToken: token,
+                    REmail: REmail,
+                    Password: Rpassword,
+                    ConfirmPassword: ConfirmPassword,
+                    firstName: firstName,
+                    lastName: LastName,
+                    Gender: gender
+                }, function (data) {
+                        if (data.Message == "Success") {
+                            window.location.href ="/Home/index";
+                        } else {
+                            $("#signUpBtn").text("Login");
+                            $("#signUpBtn").removeAttr("disabled");
+                            $("#errorREmail").show(); $("#errorREmail").text(data.Message);
+                        }                    
+                })
+            }
+        });
+
+        $("#signinForm").on("submit", function (event) {
+            event.preventDefault(); $("#errorLogin").hide();
+            $("#signInBtn").text("Loging in....");
+            $("#signInBtn").prop("disabled","disabled");
+            var email = $("#Email").val().trim();
+            var password = $("#Password").val().trim();
+            var rememberMe = $("#RememberMe").prop("checked")
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            $.post("/Account/login", {
+                Email: email,
+                Password: password,
+                RememberMe: rememberMe,
+                __RequestVerificationToken: token
+            }, function (data) {
+                    if (data.Message == "Success") {
+                        //window.location.href = "/Home/Index";
+                        window.location.href = $("#returnUrl").val();
+                    } else {
+                        $("#signInBtn").text("Login");
+                        $("#signInBtn").removeAttr("disabled");
+
+                        $("#errorLogin").text(data.Message);$("#errorLogin").show();
+                    }
+            })
+        })
+    });
+
+    
+</script>
+}

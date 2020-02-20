@@ -1,0 +1,52 @@
+﻿@model  IEnumerable<Koora.Models.MyModels.Position>
+@{
+    Layout = "~/Views/Shared/_LayoutInner.cshtml";
+    ViewBag.title = (Model==null)?Model.First()._event.name+" Position":"No Positions";
+}
+
+    <style>
+        .desc-comp-offer-cont{
+            background: rgba(151, 185, 215, 0.49);;
+            color:white;
+        }
+    </style>
+
+<section id="news-p1" class="news-p1 mb-5" style="min-height:80vh">
+    <div class="container">
+        @if (Model.Count() > 0)
+        {
+        
+
+            <div class="wow row fadeInLeft">
+                @foreach (var p in Model)
+                {
+                    <div class="col-md-6 card">
+                        <a href="/Event/Vote/@p.id">
+                            <div class="desc-comp-offer-cont p-3">
+                                <h3 class="p-3 text-center" style="font-size: 1.5em">@p.name</h3>
+                            </div>  
+                        </a>
+                        
+                    </div>
+                }
+
+            </div>
+
+       
+        }
+        else
+        {
+            <div class="jumbotron">
+                <div class="h1">There are no positions added yet!!</div>
+            </div>
+        }
+
+    </div>
+</section>
+
+@section scripts{
+    <script>
+        $("#eventIco").addClass("activeNav");
+    </script>
+    
+    }

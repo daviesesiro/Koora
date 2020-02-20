@@ -1,0 +1,131 @@
+.btn-green:hover, .btn-green:focus {
+    background-color: #203b93;
+    color: #fff;
+    cursor: pointer;
+}
+
+header .topmenu {
+    background-color: rgb(235, 235, 235);
+    border: none;
+    color: white;
+}
+
+    header .topmenu .top-contacts li {
+        color: rgb(0, 0, 0);
+    }
+
+        header .topmenu .top-contacts li a {
+            color: #203B93 !important;
+        }
+
+    header .topmenu .top-data li a.log-top {
+        color: black;
+        border: none;
+    }
+
+    header .topmenu .top-contacts i {
+        color: #203B93;
+    }
+
+    header .topmenu .top-data li {
+        border: none;
+    }
+
+        header .topmenu .top-data li:first-child {
+            border: none;
+        }
+
+.navbar {
+    background-color: #203B93;
+    color: white !important;
+    border-top: #77b054 solid 3px;
+}
+
+.navbar-nav > li > a {
+    color: white !important;
+}
+
+    .navbar-nav > li > a:hover {
+        color: white !important;
+    }
+
+.navbar-nav > li:hover {
+    background-color: #77b054 !important;
+}
+
+#NavUserBadge {
+    background-color: #179a12;
+}
+
+#userBadge {
+    background-color: #126d13;
+}
+    #userBadge:hover {
+        background-color: #203B93;
+    }
+
+.dropdown-cust {
+    border-bottom: #77b054 solid 2px;
+    border-top: #77b054 solid 2px;
+}
+
+.hero h1 span a {
+    color: #203B93;
+}
+
+.btn-green {
+    color: #203B93;
+    border: #203B93 solid 2px;
+}
+
+    .btn-green:hover {
+        color: white;
+        background-color: #203B93;
+    }
+
+.heading-border-light {
+    background-color: #203B93
+}
+
+.service-h-tab .nav-tabs > a.active {
+    background-color: #203B93;
+    border: #203B93 solid 1px;
+}
+
+.service-h-tab .nav-tabs > a {
+    color: #203B93;
+}
+
+.nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
+    border: solid 1px #203B93;
+}
+
+#footer-bottom {
+    background-color: #203B93;
+    border-bottom: 4px #77b054 solid;
+}
+
+#footer-copyrights p {
+    color: white;
+}
+
+header .topmenu{
+    color:black;
+}
+
+#themeToggle {
+    color: white;
+}
+#themeToggle1 {
+    color: white;
+}
+
+
+#NavUserBadge{
+    /*background-color:blue;*/
+}
+
+.activeNav {
+    /*border-bottom: 3px solid #97b9d7;*/
+    color: #97b9d7 !important;
+}

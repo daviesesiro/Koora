@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Koora.Models.MyModels.Place>
+
+@{
+    ViewBag.Title = "Place";
+    ViewBag.idN = "home-p";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!--====================================================
+                       HOME-P
+======================================================-->
+<div id="@ViewBag.idN" class="home-p pages-head1 text-center">
+    <div class="container">
+        <h1 class="wow fadeInUp" data-wow-delay="0.1s">Places On Campus</h1>
+        <p>Live</p>
+    </div><!--/end container-->
+</div>
+
+<!--====================================================
+                        news-p1
+======================================================-->
+<section id="news-p1" class="news-p1" style="min-height:50vh">
+    <div class="container">
+        <div class="row">
+            <div class="card-columns">
+                @foreach (var m in Model)
+                {
+                <div class="card">
+                    <div class="desc-comp-offer-cont">
+                        <div class="thumbnail-blogs">
+                            <div class="caption">
+                                <i class="fa fa-chain"></i>
+                            </div>
+                            <img src="img/news/news-6.jpg" class="img-fluid" alt="...">
+                        </div>
+                        <h3>Modified hand-cart with steering</h3>
+                        <p class="desc">The idea is to incorporate easy steering mechanism and brakes to make turning hand carts easy and arrest slide on inclines. </p>
+                        @Html.ActionLink("RATE", "PlaceDetail", "Places", new {id=m.id }, new { @class = "fa fa-arrow-circle-o-right" })
+                    </div>
+                </div>
+                }
+                
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script>
+        $("#placeIco").addClass("activeNav");
+    </script>
+    
+    }

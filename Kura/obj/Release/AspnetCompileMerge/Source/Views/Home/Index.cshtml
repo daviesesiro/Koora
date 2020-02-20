@@ -1,0 +1,133 @@
+﻿@model IEnumerable<Koora.Models.MyModels.Event>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Home";
+    ViewBag.idN = "home";
+    int count = 3, counter = 0;
+}
+
+    <style>
+        @@media (max-width: 767px) {
+            .service-h-tab .nav-tabs > a {
+                width: 100%;
+            }
+        }
+    </style>
+<!--====================================================
+                         HOME
+======================================================-->
+<section id="@ViewBag.idN">
+     <!--CAROUSEL ITEMS-->
+    <div class="bd-example">
+        <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="~/Content/img/Ballot.jpg" class="d-block w-100" style="max-height:90vh" alt="...">
+                    <div class="hero ">
+                        <hgroup class="wow fadeInUp">
+                            <h1>
+                               Welcome to<span>
+                                    <a href="" class="typewrite" data-period="2000" data-type='[ " Koora", " a Secured Voting System"]'>
+                                        <span class="wrap"></span>
+                                    </a>
+                                </span>
+                            </h1>
+                            <h3>Free and fair Results..So reliable you have your say</h3>
+                        </hgroup>
+                        @Html.ActionLink("View Events", "index", "Event", new { }, new { @class = "btn btn-general btn-green wow fadeInUp" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>       
+</section>
+    
+<!--====================================================
+                   SERVICE-HOME
+======================================================-->
+<section id="service-h">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 wow fadeInUp" data-wow-delay="0.3s">
+                <div class="service-h-desc">
+                      <div class="service-h-tab">
+                        <nav class="nav nav-tabs" id="myTab" role="tablist">
+                            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-expanded="true">About Koora</a>
+                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile">How to use Koora</a>
+                        </nav>
+                        <div class="tab-content" id="nav-tabContent">
+                            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"><p>Koora is an online system that allows you to vote on events and rate places on campus. It was developed by the Coder's prime; a student's developer club of Edo university Iyamho.<br />The name "KOORA" was derived from a swahili word "KURA" which means <i>Voting</i>.<br />The reason for creating Koora was to solve the questions of votings are being done in events in the university, and how best would students be able to rate their Classes,  Canteens,Hostels etc.  </p></div>
+                            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                                <p>Nulla est ullamco ut irure incididunt nulla Lorem Lorem minim irure officia enim reprehenderit. Magna duis labore cillum sint adipisicing exercitation ipsum. Nostrud ut anim non exercitation velit laboris fugiat cupidatat. Commodo esse dolore fugiat sint velit ullamco magna consequat voluptate minim amet aliquip ipsum aute</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--====================================================
+                       NEWS
+======================================================-->
+<section id="comp-offer">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 col-sm-12  desc-comp-offer wow fadeInUp" data-wow-delay="0.2s">
+                <h2>Latest Events</h2>
+                <div class="heading-border-light"></div>
+                @Html.ActionLink("See More", "index", "Event", new { }, new { @class = "btn btn-general btn-green wow fadeInUp" })
+                @*<a href="Event.html"><button class="btn btn-general btn-green" role="button">See More</button></a>*@
+            </div>
+
+            @foreach (var e in Model)
+            {
+                if (counter != count)
+                {
+                    <div class="col-md-3 col-sm-12 desc-comp-offer wow fadeInUp" data-wow-delay="0.4s">
+                        <div class="desc-comp-offer-cont">
+                            <div class="thumbnail-blogs">
+                                <div style="background-image:url(@e.ImgDirectory);width:100%;min-height:20em;background-size:cover;"></div>
+                                @if (e.IsOngoing)
+                                {
+                                    <span data-toggle="tooltip" data-placement="top" title="Ongoing Event">
+                                        <p class="signal s-on col-md-1 offset-11"></p>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span data-toggle="tooltip" data-placement="top" title="Finished Event">
+                                        <p class="signal s-off col-md-1 offset-11"></p>
+                                    </span>
+                                }
+                            </div>
+                            <h3>@e.name</h3>
+                            <p class="desc">@e.Description </p>
+                            @if (e.IsOngoing)
+                            {
+
+                                <a href="/Event/position/@e.id"> <i class="fa fa-arrow-circle-o-right"></i> Learn More</a>
+                            }
+                            else
+                            {
+
+                                <a href="/Event/Result/@e.id"> <i class="fa fa-arrow-circle-o-right"></i> View Result</a>
+                            }
+                        </div>
+                    </div>
+                    counter++;
+                }
+                else { break; }
+
+            }
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script>
+        $("#homeIco").addClass("activeNav");
+    </script>
+    
+    }

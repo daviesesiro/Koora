@@ -1,0 +1,136 @@
+﻿@model Koora.Models.MyModels.Place
+
+@{
+    ViewBag.Title = "Rate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section id="single-news-p1" class="single-news-p1">
+    <div class="container">
+        <div class="row">
+            <!-- left news details -->
+            @*<div class="col-md-2"></div>*@
+            <div class="col-md-12">
+                <div class="single-news-p1-cont">
+                    <div class="single-news-img">
+                        <img src="~/Content/img/news/news-1.jpg" alt="" class="img-fluid">
+                    </div>
+                    <div class="single-news-desc">
+                        <h3>@Model.name</h3>
+                        <ul class="list-inline">
+                            <li>Posted: <span class="text-theme-colored2"> 9/9/2018</span></li>
+                            <li>By: <span class="text-theme-colored2">Admin</span></li>
+                            <li><i class="fa fa-comments-o"></i> 1 comments</li>
+                        </ul>
+                        <hr>
+                        <div class="bg-light-gray">
+                            <p>@Model.description</p>
+              
+                        </div>
+
+                    </div>
+                </div>
+                <hr>
+            </div>
+            <div class="comments-container col-md-7">
+                <ul id="comments-list" class="comments-list">
+                    <li>
+                        <div class="comment-main-level">
+                            <!-- Avatar -->
+                            <div class="comment-avatar"><img src="~/Content/img/news/news-1.jpg" alt=""></div>
+                            <!-- Contenedor del Comentario -->
+                            <div class="comment-box">
+                                <div class="comment-head">
+                                    <h6 class="comment-name by-author"><a href="#">John Boss</a></h6>
+                                    <span>before 20 minutes</span>
+                                    <i class="fa fa-reply"></i>
+                                    <i class="fa fa-heart"></i>
+                                </div>
+                                <div class="comment-content">
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit omnis animi et iure laudantium vitae, praesentium optio, sapiente distinctio illo?
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Respuestas de los comentarios -->
+                        <ul class="comments-list reply-list">
+                            <li>
+                                <!-- Avatar -->
+                                <div class="comment-avatar"><img src="img/client/avatar-6.jpg" alt=""></div>
+                                <!-- Contenedor del Comentario -->
+                                <div class="comment-box sub-comment-box">
+                                    <div class="comment-head">
+                                        <h6 class="comment-name"><a href="#">Tresa Ben</a></h6>
+                                        <span>hace 10 minutos</span>
+                                        <i class="fa fa-reply"></i>
+                                        <i class="fa fa-heart"></i>
+                                    </div>
+                                    <div class="comment-content">
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit omnis animi et iure laudantium vitae, praesentium optio, sapiente distinctio illo?
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li>
+                                <!-- Avatar -->
+                                <div class="comment-avatar"><img src="img/client/avatar-2.jpg" alt=""></div>
+                                <!-- Contenedor del Comentario -->
+                                <div class="comment-box sub-comment-box">
+                                    <div class="comment-head">
+                                        <h6 class="comment-name by-author"><a href="#">John Boss</a></h6>
+                                        <span>before 10 minutes</span>
+                                        <i class="fa fa-reply"></i>
+                                        <i class="fa fa-heart"></i>
+                                    </div>
+                                    <div class="comment-content">
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit omnis animi et iure laudantium vitae, praesentium optio, sapiente distinctio illo?
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <div class="comment-main-level">
+                            <!-- Avatar -->
+                            <div class="comment-avatar"><img src="img/client/avatar-1.jpg" alt=""></div>
+                            <!-- Contenedor del Comentario -->
+                            <div class="comment-box">
+                                <div class="comment-head">
+                                    <h6 class="comment-name"><a href="#">Blensan Trul</a></h6>
+                                    <span>before 10 minutes</span>
+                                    <i class="fa fa-reply"></i>
+                                    <i class="fa fa-heart"></i>
+                                </div>
+                                <div class="comment-content">
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit omnis animi et iure laudantium vitae, praesentium optio, sapiente distinctio illo?
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            @*<div class="col-md-4></div>*@
+            <div class="col-md-8">
+                <div class="comment-box-sn">
+                    <h5>Leave a Reply</h5>
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary()
+                        <div class="form-group">
+                            @Html.TextAreaFor(m => m.description, new { placeholder = "Comment" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBoxFor(m => m.description)
+                        </div>
+
+                        <input type="text" name="text" placeholder="Name" class="form-control"><br>
+                        <button class="btn btn-general btn-green" style="width: 100%;" role="button">Send</button>
+                    }
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>

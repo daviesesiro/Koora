@@ -1,0 +1,182 @@
+﻿@{
+    ViewBag.Title = "Team";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .teamImg {
+        width: 100%;
+    }
+</style>
+
+<!--====================================================
+                       HOME-P
+======================================================-->
+<div id="home-p" class="home-p pages-head1 text-center">
+    <div class="container">
+        <h1 class="wow fadeInUp" data-wow-delay="0.1s">We offer a huge opportunity for growth</h1>
+        <p>Discover more about Team</p>
+    </div><!--/end container-->
+</div>
+
+<!--====================================================
+                      TEAM-P1
+======================================================-->
+<section id="team-p1" class="team-p1">
+    <div class="container">
+        <h3>MEET OUR TEAM</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="team-p1-cont wow fadeInUp" data-wow-delay="0.3s">
+                    <img src="~/Content/img/team/Mentor1.jpg" class="img-fluid w-100" alt="...">
+                    <h5>Dr. A. S. Makinde</h5>
+                    <h6>Mentor</h6>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="team-p1-cont wow fadeInUp" data-wow-delay="0.6s">
+                    <img src="~/Content/img/team/Mentor2.jpg" class="img-fluid w-100" alt="...">
+                    <h5>Mr David Acheme I</h5>
+                    <h6>Mentor</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--====================================================
+                      TEAM-P2
+======================================================-->
+<section id="comp-offer" class="team-p2">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-sm-6  desc-comp-offer">
+                <h2>Team Leads</h2>
+                <div class="heading-border-light"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-sm-6 ">
+                <div class="team-p2-cont wow fadeInUp" data-wow-delay="0.2s">
+                    <img src="~/Content/img/team/SanniFatai.jpg" class="img-responsive w-100" alt="...">
+                    <h5>Sanni Fatai E.</h5>
+                    <h6>Front End Developer</h6>
+
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 ">
+                <div class="team-p2-cont wow fadeInUp" data-wow-delay="0.4s">
+
+                    <img src="~/Content/img/team/DaviesEsiro.jpg" class="img-responsive teamImg" />
+                    <h5>Davies Esiro</h5>
+                    <h6>Back-end Programmer</h6>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 ">
+                <div class="team-p2-cont wow fadeInUp" data-wow-delay="0.6s">
+                    <img src="~/Content/img/team/DanielOtti.jpg" class="w-100" />
+
+                    <h5>Otti Daniel O.</h5>
+                    <h6>Mobile App Developer</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--====================================================
+                      TEAM-P1
+======================================================-->
+<section id="team-p1" class="team-p1">
+    <div class="container">
+        <h3>Full Geng</h3>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="team-p1-cont wow fadeInUp" data-wow-delay="0.3s">
+                    <img src="~/Content/img/team/geng.jpg" class="img-fluid w-100" alt="...">
+                    <h5>Members of Coder's Prime</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--====================================================
+                    CONTACT HOME
+======================================================-->
+<div class="overlay-contact-h"></div>
+<section id="contact-h" class="bg-parallax contact-h-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="contact-h-cont">
+                    <h3 class="cl-white">Contact Us</h3><br>
+                    <form id="feedbackForm">
+                        @Html.AntiForgeryToken()
+                        <div class="alert" id="feedbackError" style="display:none"></div>
+                        <div class="form-group cl-white">
+                            <label for="name">Your Name</label><span style="color:#9e9e9e;font-size:x-small"> (optional)</span>
+                            <input type="text" class="form-control" id="name" aria-describedby="nameHelp" placeholder="Enter name" >
+                        </div>
+                        <div class="form-group cl-white">
+                            <label for="subject">Subject</label>
+                            <input type="text" class="form-control" id="subject" aria-describedby="subjectHelp" placeholder="Enter subject" required>
+                        </div>
+                        <div class="form-group cl-white">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" aria-describedby="emailtHelp" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group cl-white">
+                            <label for="message">Message</label>
+                            <textarea class="form-control" id="message" rows="3" required></textarea>
+                        </div>
+                        <button id="sendbtn" class="btn btn-general btn-white" type="submit" role="button"><i fa fa-right-arrow></i>Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#teamIco").addClass("activeNav");
+
+            $("#feedbackForm").submit(function (event) {
+                event.preventDefault();
+                $("#feedbackError").hide();
+                var name = $("#name").val().trim();
+                var subject = $("#subject").val().trim();
+                var message = $("#message").val().trim();
+                var email = $("#email").val().trim();
+                var token = $("input[name='__RequestVerificationToken']").val()
+
+                $("#sendbtn").attr("disabled", "Disabled");
+                $("#sendbtn").text("sending...");
+
+                $.post('/Admin/feedback', { __RequestVerificationToken: token, Name: name, Subject: subject, Email: email, Message: message }, function (data) {
+                    $("#sendbtn").removeAttr("disabled");
+                    $("#sendbtn").text("send");
+                    if (data.isOk) {
+                        
+                        $("#feedbackError").show();
+                        $("#feedbackError").text("We have successfully received the message");
+                        $("#feedbackError").addClass("alert-success");
+                    } else {
+                        $("#feedbackError").show();
+                        $("#feedbackError").text("Something went wrong");
+                        $("#feedbackError").addClass("alert-danger");
+                    }
+                }).fail(function () {
+                    $("#feedbackError").show();
+                    $("#feedbackError").text("Network Error");
+                    $("#feedbackError").addClass("alert-danger");
+                });
+            });
+        })
+
+    </script>
+
+}

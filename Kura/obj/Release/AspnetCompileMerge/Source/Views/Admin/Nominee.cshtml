@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Koora.Models.MyModels.Nominee>
+
+@{
+    ViewBag.Title = "Nominee";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="pr-5 pl-5" >
+    <h2>Nominee</h2>
+
+    @*<button id="newBtn" class="btn btn-primary mb-3 mt-3">New Nominee</button>*@
+    <div class="table-container min-vh-100" >
+        <table id="nominees" class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.position.name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.votes)
+                    </th>
+                    <th>TOOL</th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.position.name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.votes)
+                    </td>
+                    <td>
+                        @*<a class="btn text-white btn-primary" id="edit" data-nominee-id="@item.id"><i class="fa fa-edit"></i>Edit</a>*@
+                        <a class="btn text-white btn-danger ml-1" id="delete" data-nominee-id="@item.id"><i class="fa fa-trash-o"></i>Delete</a>
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+    
+
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $("#nominees").DataTable();
+
+            $("#nominees").on("click", "#delete", function() {
+                var button = $(this);
+                if (confirm("Do you want to delete this nominee")) {
+                    $.get("/Admin/DeleteNominee/" + button.data("nominee-id"), (data) => {
+                        table.row(button.parents("tr")).remove().draw();
+                        toastr.success(data.Message,"Nominee");
+                    });
+                }
+            });
+        });
+
+    </script>
+}

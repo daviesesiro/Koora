@@ -1,0 +1,38 @@
+﻿@model Koora.Models.ViewModels.ResultViewModel
+
+@{
+    ViewBag.Title = Model.EventName+" Result";
+    Layout = "~/Views/Shared/_LayoutInner.cshtml";
+}
+
+    <div class="container px-md-5" style="height:100%">
+
+        <h3 style="font-size:1.5em" class="mt-5 text-center">Results for @Model.EventName</h3>
+
+        <section class="mt-5">
+            @foreach (var cat in Model.Nominees.GroupBy(m => m.position.name))
+            {
+                <p class="h4 mt-4">@cat.Key</p>
+                <table class="table table-hover mb-5">
+                    <thead style="background-color:cornflowerblue">
+                        <tr>
+                            <th>Nominee</th>
+                            <th>Votes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var nom in cat.OrderByDescending(m=>m.votes))
+                        {
+                            <tr>
+                                <td>@nom.name</td>
+                                <td>@nom.votes</td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            }
+        </section>
+
+    </div>
+
